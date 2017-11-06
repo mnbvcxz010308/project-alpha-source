@@ -40,7 +40,7 @@ MARKDOWN = {
 }
 
 # Paths are relative to `content`
-STATIC_PATHS = ['images', 'favicon2.ico', '404.html', 'robots.txt', 'CNAME']
+STATIC_PATHS = ['images', 'favicon.ico', '404.html', 'robots.txt', 'CNAME']
 
 # THEME SETTINGS
 DEFAULT_HEADER_BG = '/images/station1.jpg'
