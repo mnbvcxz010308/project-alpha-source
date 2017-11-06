@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>EssentialDataScience</title><link href="/" rel="alternate"></link><link href="/feeds/all.atom.xml" rel="self"></link><id>/</id><updated>2017-11-05T20:00:00+05:30</updated><entry><title>First Post</title><link href="/first-post.html" rel="alternate"></link><published>2017-11-05T20:00:00+05:30</published><updated>2017-11-05T20:00:00+05:30</updated><author><name>Vipin G S</name></author><id>tag:,2017-11-05:first-post.html</id><summary type="html">&lt;style type="text/css"&gt;/*!
+<feed xmlns="http://www.w3.org/2005/Atom"><title>EssentialDataScience</title><link href="https://blog.vipings.com/" rel="alternate"></link><link href="https://blog.vipings.com/feeds/all.atom.xml" rel="self"></link><id>https://blog.vipings.com/</id><updated>2017-11-06T00:00:00+05:30</updated><entry><title>Impala to python: ODBC and thrift</title><link href="https://blog.vipings.com/blog/2017/11/06/impala-to-python/" rel="alternate"></link><published>2017-11-06T00:00:00+05:30</published><updated>2017-11-06T00:00:00+05:30</updated><author><name>Vipin G S</name></author><id>tag:blog.vipings.com,2017-11-06:blog/2017/11/06/impala-to-python/</id><summary type="html">&lt;style type="text/css"&gt;/*!
 *
 * IPython notebook
 *
@@ -975,7 +975,12 @@ h6:hover .anchor-link {
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;h1 id="Practice-Python-Exercise-n"&gt;Practice Python Exercise n&lt;a class="anchor-link" href="#Practice-Python-Exercise-n"&gt;&amp;#182;&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;For good or bad HDFS is where the data is placed today and we all know this data is hard and slow to query and analyze. The good news is that the people at Cloudera created &lt;a href="http://www.cloudera.com/content/cloudera/en/products-and-services/cdh/impala.html"&gt;impala&lt;/a&gt;, basic idea is: &lt;strong&gt;fast&lt;/strong&gt; SQL on Hadoop (HDFS or HBase) using the Hive metastore.&lt;/p&gt;
+&lt;p&gt;For good or for bad Hadoop is not were Data Science happens it usually happens in R or python, good news is that the folks at cloudera made sure that is very easy to extract data out of impala using standard technologies such as ODBC or &lt;a href="http://thrift.apache.org/"&gt;thrift&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this post I try some tools to extract data from impala to python (pandas) to do in memory analysis.&lt;/p&gt;
+&lt;p&gt;The setup is quite simple since I am running the cloudera (CDH 4.6) in my own computer using their &lt;a href="http://www.cloudera.com/content/support/en/downloads/download-components/download-products.html"&gt;virtual machine&lt;/a&gt;, just be sure to port forward port 21050, if you are in the cloud (EC2) just be sure to open that port. The data is just a table of 100,000 rows and 3 columns in AVRO format based on the &lt;a href="http://avro.apache.org/docs/1.7.6/gettingstartedpython.html"&gt;getting started with AVRO example&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Locally just need to download the &lt;a href="http://www.cloudera.com/content/cloudera-content/cloudera-docs/Impala/latest/Installing-and-Using-Impala/ciiu_impala_odbc.html"&gt;impala ODBC driver&lt;/a&gt; and the python requirements are: &lt;code&gt;numpy&lt;/code&gt;, &lt;code&gt;pandas&lt;/code&gt;, and &lt;code&gt;thrift&lt;/code&gt; (on OS X &lt;code&gt;brew install thrift&lt;/code&gt;), use &lt;a href="https://store.continuum.io/cshop/anaconda/"&gt;Anaconda&lt;/a&gt;.&lt;/p&gt;
+
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -983,46 +988,859 @@ h6:hover .anchor-link {
 &lt;/div&gt;
 &lt;div class="inner_cell"&gt;
 &lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
-&lt;ul&gt;
-&lt;li&gt;####  Insert problem statement here.  &lt;/li&gt;
-&lt;/ul&gt;
-&lt;blockquote&gt;&lt;p&gt;Extras:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Extras 1 here &lt;/li&gt;
-&lt;li&gt;Extras 2 here&lt;/li&gt;
-&lt;/ul&gt;
-&lt;hr&gt;
-&lt;hr&gt;
-&lt;ul&gt;
-&lt;li&gt;Extras n here&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;Link: &lt;/li&gt;
-&lt;/ul&gt;
+&lt;h2 id="pyodbc"&gt;pyodbc&lt;a class="anchor-link" href="#pyodbc"&gt;&amp;#182;&lt;/a&gt;&lt;/h2&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;&lt;a href="https://code.google.com/p/pyodbc/"&gt;pyodbc&lt;/a&gt; gives you access to data stores via ODBC, install it using anaconda by running &lt;code&gt;conda install pyodbc&lt;/code&gt;, the code is very straight forward. Note that the driver location is for OS X, change it on linux or windows.&lt;/p&gt;
 
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="cell border-box-sizing code_cell rendered"&gt;
 &lt;div class="input"&gt;
-&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[&amp;nbsp;]:&lt;/div&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[1]:&lt;/div&gt;
 &lt;div class="inner_cell"&gt;
     &lt;div class="input_area"&gt;
-&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;#Main method blueprint&lt;/span&gt;
-
-&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
-    &lt;span class="k"&gt;pass&lt;/span&gt;
-&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-    
-    
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pandas&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;pd&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[2]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;pyodbc&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[3]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;connection_string&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;#39;&amp;#39;Driver=/opt/cloudera/impalaodbc/lib/universal/libclouderaimpalaodbc.dylib;&lt;/span&gt;
+&lt;span class="s1"&gt;HOST=localhost;&lt;/span&gt;
+&lt;span class="s1"&gt;PORT=21050&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[4]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pyodbc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection_string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;autocommit&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[5]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[6]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;SELECT * FROM avro_users LIMIT 100&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[6]:&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;&amp;lt;pyodbc.Cursor at 0x1059e6330&amp;gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;I took the code below from the impyla library, read more about it below.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[7]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;as_pandas&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;names&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;metadata&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;metadata&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;description&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="p"&gt;([&lt;/span&gt;&lt;span class="nb"&gt;dict&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;zip&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;row&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;names&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[8]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;as_pandas&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[9]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[9]:&lt;/div&gt;
+
+
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div style="max-height:1000px;max-width:1500px;overflow:auto;"&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;name&lt;/th&gt;
+      &lt;th&gt;favorite_number&lt;/th&gt;
+      &lt;th&gt;favorite_color&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt; a&lt;/td&gt;
+      &lt;td&gt; 45&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt; b&lt;/td&gt;
+      &lt;td&gt; 78&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt; c&lt;/td&gt;
+      &lt;td&gt; 78&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt; d&lt;/td&gt;
+      &lt;td&gt;  8&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt; a&lt;/td&gt;
+      &lt;td&gt; 34&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;5 rows × 3 columns&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[10]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shape&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[10]:&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;(100, 3)&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[11]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="IOPro"&gt;IOPro&lt;a class="anchor-link" href="#IOPro"&gt;&amp;#182;&lt;/a&gt;&lt;/h2&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;blockquote&gt;&lt;p&gt;"Fast, memory-efficient Python interface for SQL databases, NoSQL stores, Amazon S3, and large data files."&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;a href="https://store.continuum.io/cshop/iopro/"&gt;IOPro&lt;/a&gt; is a library form the amazing people at continuum analytics, it is not free but you can try it for 30 days for free, I have a student license and I use it from time to time, is very good. The main idea is to load data into numpy arrays directly, it skips python objects so is very memory efficient. For ODBC they forked pyodbc and added a few extra methods to fetch data.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[12]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;iopro.pyodbc&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;io_pyodbc&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[13]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;connection&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;io_pyodbc&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;connection_string&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;autocommit&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[14]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;io_cursor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h3 id="Fetchdictarray"&gt;Fetchdictarray&lt;a class="anchor-link" href="#Fetchdictarray"&gt;&amp;#182;&lt;/a&gt;&lt;/h3&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Using IOPro you can fetch a dictionary of numpy arrays (&lt;code&gt;fetchdictarray()&lt;/code&gt;) or just a numpy array (&lt;code&gt;fetchsarray()&lt;/code&gt;).&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[15]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;io_cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;SELECT * FROM avro_users LIMIT 100&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[15]:&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;&amp;lt;pyodbc.Cursor at 0x105ac37b0&amp;gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[16]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;metadata&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;metadata&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;io_cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;description&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[17]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;io_cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fetchdictarray&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[18]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pd&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;DataFrame&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;from_records&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;columns&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[19]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[19]:&lt;/div&gt;
+
+
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div style="max-height:1000px;max-width:1500px;overflow:auto;"&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;name&lt;/th&gt;
+      &lt;th&gt;favorite_number&lt;/th&gt;
+      &lt;th&gt;favorite_color&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; 45&lt;/td&gt;
+      &lt;td&gt; NA&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; 78&lt;/td&gt;
+      &lt;td&gt; NA&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; 78&lt;/td&gt;
+      &lt;td&gt; NA&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt;  8&lt;/td&gt;
+      &lt;td&gt; NA&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt; &lt;/td&gt;
+      &lt;td&gt; 34&lt;/td&gt;
+      &lt;td&gt; NA&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;5 rows × 3 columns&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[20]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;io_cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;You can see that there are some problems with the data, the &lt;code&gt;name&lt;/code&gt; column is empty, and less crucial &lt;code&gt;favorite_color&lt;/code&gt; is full of &lt;em&gt;"NA"&lt;/em&gt; strings. To fix this you need to fall back the &lt;code&gt;pyodbc&lt;/code&gt; &lt;code&gt;fetchall()&lt;/code&gt; which creates a python list of tuples and then use that to create the pandas DataFrame, not the best approach since the idea of IOPro is go directly to numpy skipping python objects.&lt;/p&gt;
+&lt;p&gt;So for now if you want to use IOPro stick to numeric columns.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="Impyla"&gt;Impyla&lt;a class="anchor-link" href="#Impyla"&gt;&amp;#182;&lt;/a&gt;&lt;/h2&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Another free alternative is &lt;a href="https://github.com/laserson/impyla"&gt;impyla&lt;/a&gt; which is not very updated on Pypi so better to install it from the git repo: &lt;code&gt;pip intall git+git://github.com/myuser/foo.git@3041bc5192ad46c397c23314039661e9519ffe25&lt;/code&gt;. The main difference is that uses thrift instead of ODBC to get data from impala.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[21]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;impala.dbapi&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;impala.util&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[22]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;imp_connection&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;impala&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dbapi&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;connect&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;localhost&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;21050&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;imp_cursor&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;connection&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;cursor&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;imp_cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;execute&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;SELECT * FROM avro_users LIMIT 100&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[22]:&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;&amp;lt;pyodbc.Cursor at 0x10a1108d0&amp;gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[23]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;impala&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;as_pandas&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;imp_cursor&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[24]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;df&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;head&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[24]:&lt;/div&gt;
+
+
+
+&lt;div class="output_html rendered_html output_subarea output_execute_result"&gt;
+&lt;div style="max-height:1000px;max-width:1500px;overflow:auto;"&gt;
+&lt;table border="1" class="dataframe"&gt;
+  &lt;thead&gt;
+    &lt;tr style="text-align: right;"&gt;
+      &lt;th&gt;&lt;/th&gt;
+      &lt;th&gt;name&lt;/th&gt;
+      &lt;th&gt;favorite_number&lt;/th&gt;
+      &lt;th&gt;favorite_color&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;th&gt;0&lt;/th&gt;
+      &lt;td&gt; a&lt;/td&gt;
+      &lt;td&gt; 45&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;1&lt;/th&gt;
+      &lt;td&gt; b&lt;/td&gt;
+      &lt;td&gt; 78&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;2&lt;/th&gt;
+      &lt;td&gt; c&lt;/td&gt;
+      &lt;td&gt; 78&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;3&lt;/th&gt;
+      &lt;td&gt; d&lt;/td&gt;
+      &lt;td&gt;  8&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;th&gt;4&lt;/th&gt;
+      &lt;td&gt; a&lt;/td&gt;
+      &lt;td&gt; 34&lt;/td&gt;
+      &lt;td&gt; None&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;5 rows × 3 columns&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[25]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;imp_cursor&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;close&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="Speedtest"&gt;Speedtest&lt;a class="anchor-link" href="#Speedtest"&gt;&amp;#182;&lt;/a&gt;&lt;/h2&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;This is a &lt;strong&gt;very&lt;/strong&gt; simple speed test reading 100,000 rows from impala. Each case includes from the connection to creating a pandas DataFrame.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;pyodbc&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[26]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%%&lt;/span&gt;&lt;span class="k"&gt;timeit&lt;/span&gt; -n5 -r5
+connection = pyodbc.connect(connection_string, autocommit=True)
+cursor = connection.cursor()
+cursor.execute(&amp;#39;SELECT * FROM avro_users&amp;#39;)
+data = cursor.fetchall()
+pd.DataFrame.from_records(data, columns=columns)
+cursor.close()
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
+&lt;pre&gt;5 loops, best of 5: 18.2 s per loop
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;iopro&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[27]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%%&lt;/span&gt;&lt;span class="k"&gt;timeit&lt;/span&gt; -n5 -r5
+connection = io_pyodbc.connect(connection_string, autocommit=True, ansi=True)
+io_cursor = connection.cursor()
+io_cursor.execute(&amp;#39;SELECT * FROM avro_users&amp;#39;)
+data = io_cursor.fetchall()
+pd.DataFrame.from_records(data, columns=columns)
+io_cursor.close()
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
+&lt;pre&gt;5 loops, best of 5: 19.5 s per loop
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;impyla&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[28]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%%&lt;/span&gt;&lt;span class="k"&gt;timeit&lt;/span&gt; -n5 -r5
+imp_connection = impala.dbapi.connect(host=&amp;#39;localhost&amp;#39;, port=21050)
+imp_cursor = connection.cursor()
+imp_cursor.execute(&amp;#39;SELECT * FROM avro_users&amp;#39;)
+impala.util.as_pandas(imp_cursor)
+imp_cursor.close()
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+&lt;div class="output_subarea output_stream output_stdout output_text"&gt;
+&lt;pre&gt;5 loops, best of 5: 18.8 s per loop
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Not surprisingly all of them are very similar since 1. the data is not really big (100,000 x 3) and 2. is located in a local virtual machine.&lt;/p&gt;
+&lt;p&gt;On a previous execution of the timing I got that iopro was faster than the default ODBC and that impyla was even faster, so please do not take this numbers as a complete benchmark. Also note that where IOPro excels is memory efficiency, for more info look at &lt;a href="http://continuum.io/blog/iopro-pyodbc-performance"&gt;this blog post&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;From the three choices the easier to get up and running fast is impyla since thrift is easier to install, so if you don't care that much about memory and care more about getting the data out of impala I would recommend it. ODBC gives you nice features like transaction, but transactions are not available in impala (yet) so not much of a killer feature there.&lt;/p&gt;
+&lt;p&gt;Do you have any other alternatives to extract data from Impala to python or general HDFS to python, specially to numpy arrays? Let me know.
+I will keep trying this technologies, specially with some real &lt;em&gt;"big"&lt;/em&gt; data and post more results if I find something interesting.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
 &lt;/div&gt;
  
 
@@ -1055,4 +1873,1540 @@ h6:hover .anchor-link {
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
 &lt;/script&gt;
-</summary><category term="python firsts"></category></entry></feed>
+</summary><category term="Python"></category><category term="Impala"></category><category term="ODBC"></category><category term="Thrift"></category><category term="IOPro"></category></entry><entry><title>IPython.parallel cluster using salt</title><link href="https://blog.vipings.com/blog/2017/11/05/ipython-parallel-cluster-salt/" rel="alternate"></link><published>2017-11-05T00:00:00+05:30</published><updated>2017-11-05T00:00:00+05:30</updated><author><name>Vipin G S</name></author><id>tag:blog.vipings.com,2017-11-05:blog/2017/11/05/ipython-parallel-cluster-salt/</id><summary type="html">&lt;style type="text/css"&gt;/*!
+*
+* IPython notebook
+*
+*/
+/* CSS font colors for translated ANSI colors. */
+.ansibold {
+  font-weight: bold;
+}
+/* use dark versions for foreground, to improve visibility */
+.ansiblack {
+  color: black;
+}
+.ansired {
+  color: darkred;
+}
+.ansigreen {
+  color: darkgreen;
+}
+.ansiyellow {
+  color: #c4a000;
+}
+.ansiblue {
+  color: darkblue;
+}
+.ansipurple {
+  color: darkviolet;
+}
+.ansicyan {
+  color: steelblue;
+}
+.ansigray {
+  color: gray;
+}
+/* and light for background, for the same reason */
+.ansibgblack {
+  background-color: black;
+}
+.ansibgred {
+  background-color: red;
+}
+.ansibggreen {
+  background-color: green;
+}
+.ansibgyellow {
+  background-color: yellow;
+}
+.ansibgblue {
+  background-color: blue;
+}
+.ansibgpurple {
+  background-color: magenta;
+}
+.ansibgcyan {
+  background-color: cyan;
+}
+.ansibggray {
+  background-color: gray;
+}
+div.cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  border-radius: 2px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  width: 100%;
+  padding: 5px;
+  /* This acts as a spacer between cells, that is outside the border */
+  margin: 0px;
+  outline: none;
+  border-left-width: 1px;
+  padding-left: 5px;
+  background: linear-gradient(to right, transparent -40px, transparent 1px, transparent 1px, transparent 100%);
+}
+div.cell.jupyter-soft-selected {
+  border-left-color: #90CAF9;
+  border-left-color: #E3F2FD;
+  border-left-width: 1px;
+  padding-left: 5px;
+  border-right-color: #E3F2FD;
+  border-right-width: 1px;
+  background: #E3F2FD;
+}
+@media print {
+  div.cell.jupyter-soft-selected {
+    border-color: transparent;
+  }
+}
+div.cell.selected {
+  border-color: #ababab;
+  border-left-width: 0px;
+  padding-left: 6px;
+  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 5px, transparent 5px, transparent 100%);
+}
+@media print {
+  div.cell.selected {
+    border-color: transparent;
+  }
+}
+div.cell.selected.jupyter-soft-selected {
+  border-left-width: 0;
+  padding-left: 6px;
+  background: linear-gradient(to right, #42A5F5 -40px, #42A5F5 7px, #E3F2FD 7px, #E3F2FD 100%);
+}
+.edit_mode div.cell.selected {
+  border-color: #66BB6A;
+  border-left-width: 0px;
+  padding-left: 6px;
+  background: linear-gradient(to right, #66BB6A -40px, #66BB6A 5px, transparent 5px, transparent 100%);
+}
+@media print {
+  .edit_mode div.cell.selected {
+    border-color: transparent;
+  }
+}
+.prompt {
+  /* This needs to be wide enough for 3 digit prompt numbers: In[100]: */
+  min-width: 14ex;
+  /* This padding is tuned to match the padding on the CodeMirror editor. */
+  padding: 0.4em;
+  margin: 0px;
+  font-family: monospace;
+  text-align: right;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+  /* Don't highlight prompt number selection */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  /* Use default cursor */
+  cursor: default;
+}
+@media (max-width: 540px) {
+  .prompt {
+    text-align: left;
+  }
+}
+div.inner_cell {
+  min-width: 0;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_area {
+  border: 1px solid #cfcfcf;
+  border-radius: 2px;
+  background: #f7f7f7;
+  line-height: 1.21429em;
+}
+/* This is needed so that empty prompt areas can collapse to zero height when there
+   is no content in the output_subarea and the prompt. The main purpose of this is
+   to make sure that empty JavaScript output_subareas have no height. */
+div.prompt:empty {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+div.unrecognized_cell {
+  padding: 5px 5px 5px 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.unrecognized_cell .inner_cell {
+  border-radius: 2px;
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+  border: 1px solid #cfcfcf;
+  background: #eaeaea;
+}
+div.unrecognized_cell .inner_cell a {
+  color: inherit;
+  text-decoration: none;
+}
+div.unrecognized_cell .inner_cell a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+@media (max-width: 540px) {
+  div.unrecognized_cell &gt; div.prompt {
+    display: none;
+  }
+}
+div.code_cell {
+  /* avoid page breaking on code cells when printing */
+}
+@media print {
+  div.code_cell {
+    page-break-inside: avoid;
+  }
+}
+/* any special styling for code cells that are currently running goes here */
+div.input {
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.input {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+/* input_area and input_prompt must match in top border and margin for alignment */
+div.input_prompt {
+  color: #303F9F;
+  border-top: 1px solid transparent;
+}
+div.input_area &gt; div.highlight {
+  margin: 0.4em;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+div.input_area &gt; div.highlight &gt; pre {
+  margin: 0px;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+/* The following gets added to the &lt;head&gt; if it is detected that the user has a
+ * monospace font with inconsistent normal/bold/italic height.  See
+ * notebookmain.js.  Such fonts will have keywords vertically offset with
+ * respect to the rest of the text.  The user should select a better font.
+ * See: https://github.com/ipython/ipython/issues/1503
+ *
+ * .CodeMirror span {
+ *      vertical-align: bottom;
+ * }
+ */
+.CodeMirror {
+  line-height: 1.21429em;
+  /* Changed from 1em to our global default */
+  font-size: 14px;
+  height: auto;
+  /* Changed to auto to autogrow */
+  background: none;
+  /* Changed from white to allow our bg to show through */
+}
+.CodeMirror-scroll {
+  /*  The CodeMirror docs are a bit fuzzy on if overflow-y should be hidden or visible.*/
+  /*  We have found that if it is visible, vertical scrollbars appear with font size changes.*/
+  overflow-y: hidden;
+  overflow-x: auto;
+}
+.CodeMirror-lines {
+  /* In CM2, this used to be 0.4em, but in CM3 it went to 4px. We need the em value because */
+  /* we have set a different line-height and want this to scale with that. */
+  padding: 0.4em;
+}
+.CodeMirror-linenumber {
+  padding: 0 8px 0 4px;
+}
+.CodeMirror-gutters {
+  border-bottom-left-radius: 2px;
+  border-top-left-radius: 2px;
+}
+.CodeMirror pre {
+  /* In CM3 this went to 4px from 0 in CM2. We need the 0 value because of how we size */
+  /* .CodeMirror-lines */
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+/*
+
+Original style from softwaremaniacs.org (c) Ivan Sagalaev &lt;Maniac@SoftwareManiacs.Org&gt;
+Adapted from GitHub theme
+
+*/
+.highlight-base {
+  color: #000;
+}
+.highlight-variable {
+  color: #000;
+}
+.highlight-variable-2 {
+  color: #1a1a1a;
+}
+.highlight-variable-3 {
+  color: #333333;
+}
+.highlight-string {
+  color: #BA2121;
+}
+.highlight-comment {
+  color: #408080;
+  font-style: italic;
+}
+.highlight-number {
+  color: #080;
+}
+.highlight-atom {
+  color: #88F;
+}
+.highlight-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.highlight-builtin {
+  color: #008000;
+}
+.highlight-error {
+  color: #f00;
+}
+.highlight-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.highlight-meta {
+  color: #AA22FF;
+}
+/* previously not defined, copying from default codemirror */
+.highlight-def {
+  color: #00f;
+}
+.highlight-string-2 {
+  color: #f50;
+}
+.highlight-qualifier {
+  color: #555;
+}
+.highlight-bracket {
+  color: #997;
+}
+.highlight-tag {
+  color: #170;
+}
+.highlight-attribute {
+  color: #00c;
+}
+.highlight-header {
+  color: blue;
+}
+.highlight-quote {
+  color: #090;
+}
+.highlight-link {
+  color: #00c;
+}
+/* apply the same style to codemirror */
+.cm-s-ipython span.cm-keyword {
+  color: #008000;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-atom {
+  color: #88F;
+}
+.cm-s-ipython span.cm-number {
+  color: #080;
+}
+.cm-s-ipython span.cm-def {
+  color: #00f;
+}
+.cm-s-ipython span.cm-variable {
+  color: #000;
+}
+.cm-s-ipython span.cm-operator {
+  color: #AA22FF;
+  font-weight: bold;
+}
+.cm-s-ipython span.cm-variable-2 {
+  color: #1a1a1a;
+}
+.cm-s-ipython span.cm-variable-3 {
+  color: #333333;
+}
+.cm-s-ipython span.cm-comment {
+  color: #408080;
+  font-style: italic;
+}
+.cm-s-ipython span.cm-string {
+  color: #BA2121;
+}
+.cm-s-ipython span.cm-string-2 {
+  color: #f50;
+}
+.cm-s-ipython span.cm-meta {
+  color: #AA22FF;
+}
+.cm-s-ipython span.cm-qualifier {
+  color: #555;
+}
+.cm-s-ipython span.cm-builtin {
+  color: #008000;
+}
+.cm-s-ipython span.cm-bracket {
+  color: #997;
+}
+.cm-s-ipython span.cm-tag {
+  color: #170;
+}
+.cm-s-ipython span.cm-attribute {
+  color: #00c;
+}
+.cm-s-ipython span.cm-header {
+  color: blue;
+}
+.cm-s-ipython span.cm-quote {
+  color: #090;
+}
+.cm-s-ipython span.cm-link {
+  color: #00c;
+}
+.cm-s-ipython span.cm-error {
+  color: #f00;
+}
+.cm-s-ipython span.cm-tab {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
+  background-position: right;
+  background-repeat: no-repeat;
+}
+div.output_wrapper {
+  /* this position must be relative to enable descendents to be absolute within it */
+  position: relative;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  z-index: 1;
+}
+/* class for the output area when it should be height-limited */
+div.output_scroll {
+  /* ideally, this would be max-height, but FF barfs all over that */
+  height: 24em;
+  /* FF needs this *and the wrapper* to specify full width, or it will shrinkwrap */
+  width: 100%;
+  overflow: auto;
+  border-radius: 2px;
+  -webkit-box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.8);
+  display: block;
+}
+/* output div while it is collapsed */
+div.output_collapsed {
+  margin: 0px;
+  padding: 0px;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+div.out_prompt_overlay {
+  height: 100%;
+  padding: 0px 0.4em;
+  position: absolute;
+  border-radius: 2px;
+}
+div.out_prompt_overlay:hover {
+  /* use inner shadow to get border that is computed the same on WebKit/FF */
+  -webkit-box-shadow: inset 0 0 1px #000;
+  box-shadow: inset 0 0 1px #000;
+  background: rgba(240, 240, 240, 0.5);
+}
+div.output_prompt {
+  color: #D84315;
+}
+/* This class is the outer container of all output sections. */
+div.output_area {
+  padding: 0px;
+  page-break-inside: avoid;
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+div.output_area .MathJax_Display {
+  text-align: left !important;
+}
+div.output_area 
+div.output_area 
+div.output_area img,
+div.output_area svg {
+  max-width: 100%;
+  height: auto;
+}
+div.output_area img.unconfined,
+div.output_area svg.unconfined {
+  max-width: none;
+}
+/* This is needed to protect the pre formating from global settings such
+   as that of bootstrap */
+.output {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: vertical;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: vertical;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.output_area {
+    /* Old browsers */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    display: -moz-box;
+    -moz-box-orient: vertical;
+    -moz-box-align: stretch;
+    display: box;
+    box-orient: vertical;
+    box-align: stretch;
+    /* Modern browsers */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+div.output_area pre {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  color: black;
+  background-color: transparent;
+  border-radius: 0;
+}
+/* This class is for the output subarea inside the output_area and after
+   the prompt div. */
+div.output_subarea {
+  overflow-x: auto;
+  padding: 0.4em;
+  /* Old browsers */
+  -webkit-box-flex: 1;
+  -moz-box-flex: 1;
+  box-flex: 1;
+  /* Modern browsers */
+  flex: 1;
+  max-width: calc(100% - 14ex);
+}
+div.output_scroll div.output_subarea {
+  overflow-x: visible;
+}
+/* The rest of the output_* classes are for special styling of the different
+   output types */
+/* all text output has this class: */
+div.output_text {
+  text-align: left;
+  color: #000;
+  /* This has to match that of the the CodeMirror class line-height below */
+  line-height: 1.21429em;
+}
+/* stdout/stderr are 'text' as well as 'stream', but execute_result/error are *not* streams */
+div.output_stderr {
+  background: #fdd;
+  /* very light red background for stderr */
+}
+div.output_latex {
+  text-align: left;
+}
+/* Empty output_javascript divs should have no height */
+div.output_javascript:empty {
+  padding: 0;
+}
+.js-error {
+  color: darkred;
+}
+/* raw_input styles */
+div.raw_input_container {
+  line-height: 1.21429em;
+  padding-top: 5px;
+}
+pre.raw_input_prompt {
+  /* nothing needed here. */
+}
+input.raw_input {
+  font-family: monospace;
+  font-size: inherit;
+  color: inherit;
+  width: auto;
+  /* make sure input baseline aligns with prompt */
+  vertical-align: baseline;
+  /* padding + margin = 0.5em between prompt and cursor */
+  padding: 0em 0.25em;
+  margin: 0em 0.25em;
+}
+input.raw_input:focus {
+  box-shadow: none;
+}
+p.p-space {
+  margin-bottom: 10px;
+}
+div.output_unrecognized {
+  padding: 5px;
+  font-weight: bold;
+  color: red;
+}
+div.output_unrecognized a {
+  color: inherit;
+  text-decoration: none;
+}
+div.output_unrecognized a:hover {
+  color: inherit;
+  text-decoration: none;
+}
+.rendered_html {
+  color: #000;
+  /* any extras will just be numbers: */
+}
+
+
+
+.rendered_html :link {
+  text-decoration: underline;
+}
+.rendered_html :visited {
+  text-decoration: underline;
+}
+
+
+
+
+
+
+.rendered_html h1:first-child {
+  margin-top: 0.538em;
+}
+.rendered_html h2:first-child {
+  margin-top: 0.636em;
+}
+.rendered_html h3:first-child {
+  margin-top: 0.777em;
+}
+.rendered_html h4:first-child {
+  margin-top: 1em;
+}
+.rendered_html h5:first-child {
+  margin-top: 1em;
+}
+.rendered_html h6:first-child {
+  margin-top: 1em;
+}
+
+
+
+
+
+
+
+
+.rendered_html * + ul {
+  margin-top: 1em;
+}
+.rendered_html * + ol {
+  margin-top: 1em;
+}
+
+
+.rendered_html pre,
+
+
+
+.rendered_html tr,
+.rendered_html th,
+
+.rendered_html td,
+
+
+.rendered_html * + table {
+  margin-top: 1em;
+}
+
+.rendered_html * + p {
+  margin-top: 1em;
+}
+
+.rendered_html * + img {
+  margin-top: 1em;
+}
+.rendered_html img,
+
+.rendered_html img.unconfined,
+
+div.text_cell {
+  /* Old browsers */
+  display: -webkit-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-align: stretch;
+  display: -moz-box;
+  -moz-box-orient: horizontal;
+  -moz-box-align: stretch;
+  display: box;
+  box-orient: horizontal;
+  box-align: stretch;
+  /* Modern browsers */
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+@media (max-width: 540px) {
+  div.text_cell &gt; div.prompt {
+    display: none;
+  }
+}
+div.text_cell_render {
+  /*font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;*/
+  outline: none;
+  resize: none;
+  width: inherit;
+  border-style: none;
+  padding: 0.5em 0.5em 0.5em 0.4em;
+  color: #000;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+a.anchor-link:link {
+  text-decoration: none;
+  padding: 0px 20px;
+  visibility: hidden;
+}
+h1:hover .anchor-link,
+h2:hover .anchor-link,
+h3:hover .anchor-link,
+h4:hover .anchor-link,
+h5:hover .anchor-link,
+h6:hover .anchor-link {
+  visibility: visible;
+}
+.text_cell.rendered .input_area {
+  display: none;
+}
+.text_cell.rendered 
+.text_cell.unrendered .text_cell_render {
+  display: none;
+}
+.cm-header-1,
+.cm-header-2,
+.cm-header-3,
+.cm-header-4,
+.cm-header-5,
+.cm-header-6 {
+  font-weight: bold;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.cm-header-1 {
+  font-size: 185.7%;
+}
+.cm-header-2 {
+  font-size: 157.1%;
+}
+.cm-header-3 {
+  font-size: 128.6%;
+}
+.cm-header-4 {
+  font-size: 110%;
+}
+.cm-header-5 {
+  font-size: 100%;
+  font-style: italic;
+}
+.cm-header-6 {
+  font-size: 100%;
+  font-style: italic;
+}
+&lt;/style&gt;
+&lt;style type="text/css"&gt;.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #f8f8f8; }
+.highlight .c { color: #408080; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #408080; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #BC7A00 } /* Comment.Preproc */
+.highlight .cpf { color: #408080; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #408080; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #408080; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #FF0000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #00A000 } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #7D9029 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #999999; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #A0A000 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #BB6688 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */&lt;/style&gt;
+&lt;style type="text/css"&gt;
+/* Temporary definitions which will become obsolete with Notebook release 5.0 */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+&lt;/style&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;This post describes a simple yet flexible implementation on how to deploy an &lt;a href="http://ipython.org/ipython-doc/dev/parallel/"&gt;IPython.parallel&lt;/a&gt; cluster in multiple EC2 instances using &lt;a href="http://www.saltstack.com/"&gt;salt&lt;/a&gt; and a little bit of &lt;a href="http://vagrantup.com/"&gt;Vagrant&lt;/a&gt;. The final output will be one instance running the IPython notebook, &lt;code&gt;ipcontroller&lt;/code&gt; and acting as the salt-master, also 6 instances each one running &lt;code&gt;ipengine&lt;/code&gt; and being salt-minions, see the &lt;a href="http://ipython.org/ipython-doc/dev/parallel/"&gt;IPython.parallel docs&lt;/a&gt; for information on those commands.&lt;/p&gt;
+&lt;p&gt;In a previous post I created a &lt;a href="http://danielfrg.com/blog/2013/11/27/ipython-notebook-aws-salt/"&gt;one-liner for deploying an ipython notebook&lt;/a&gt; to the cloud, after that I have been refactoring and advancing the concept and it became my own &lt;a href="https://github.com/danielfrg/datasciencebox"&gt;datasciencebox&lt;/a&gt;, it was natural to include the code for creating the ipcluster code in the same project.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="Why"&gt;Why&lt;a class="anchor-link" href="#Why"&gt;&amp;#182;&lt;/a&gt;&lt;/h2&gt;&lt;p&gt;Let me begin saying that I know about &lt;a href="http://star.mit.edu/cluster/"&gt;starcluster&lt;/a&gt; I have used it (for this same task) and I believe is the best way to create cluster for doing parallel computing but it lacks of a few features:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Only EC2 support: I use EC2 and a couple of AWS services everyday but what if I want to move to rackspace or any other cloud? So instead of relying on boto I use &lt;a href="http://docs.saltstack.com/en/latest/topics/cloud/"&gt;salt-cloud&lt;/a&gt; that relies on &lt;a href="https://libcloud.apache.org/"&gt;apache libcloud&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Dependency of installing the scientific libraries from pypi: I use anaconda on my mac and I wanted to use the same versions on the cloud, using the &lt;a href="http://danielfrg.com/blog/2013/11/27/ipython-notebook-aws-salt/"&gt;salt state I wrote previously&lt;/a&gt; this was an easy task. With this having the latest version is as simple as changing the &lt;code&gt;requirements.txt&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Plugins are python classes (see the &lt;a href="https://github.com/jtriley/StarCluster/blob/develop/starcluster/plugins/ipcluster.py"&gt;starcluster ipython plugin for example&lt;/a&gt;): While this is completely fine once you learn configuration management you don't want to come back, a salt state is much more easier to create and mantain&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Why not hadoop?&lt;/strong&gt; Again, I use hadoop every week, but for me it seams more natural to do the analysis on your tool of choice (python or R) and then scale it using the same (or similar) tool, it doesn't make a lot of sense to do the analysis on a tool just becuase it scales if it lacks the capabilities you need, for example the excelente interactivity of IPython.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="How"&gt;How&lt;a class="anchor-link" href="#How"&gt;&amp;#182;&lt;/a&gt;&lt;/h2&gt;&lt;h3 id="Requirements"&gt;Requirements&lt;a class="anchor-link" href="#Requirements"&gt;&amp;#182;&lt;/a&gt;&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;a href="http://www.vagrantup.com/"&gt;Vagrant&lt;/a&gt; (+&lt;a href="https://github.com/mitchellh/vagrant-aws"&gt;aws-plugin&lt;/a&gt;) to create the an EC2 instance that runs the ipython notebook. Note you could on run this on Rackspace by using &lt;a href="https://github.com/mitchellh/vagrant-rackspace"&gt;vagrant-rackspace&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;git clone&lt;/code&gt; the &lt;a href="https://github.com/danielfrg/datasciencebox"&gt;datasciencebox&lt;/a&gt; repo&lt;/li&gt;
+&lt;li&gt;AWS account credentials&lt;/li&gt;
+&lt;li&gt;Copy your EC2 keypair in the root of the repo of step 2 and name it &lt;code&gt;ipcluster.pem&lt;/code&gt;, this is so Vagrant can copy the keypair to the cloud&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="Let&amp;#x27;s-get-started"&gt;Let's get started&lt;a class="anchor-link" href="#Let&amp;#x27;s-get-started"&gt;&amp;#182;&lt;/a&gt;&lt;/h3&gt;&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;cd&lt;/code&gt; to that directory open the &lt;code&gt;Vagrantfile&lt;/code&gt; and fill the values inside &lt;code&gt;config.vm.provider&lt;/code&gt;, mainly the AWS credentials.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;vagrant up --provider=aws&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now you have an IPython notebook running in the new instance on port 8888&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h3 id="ipcluster"&gt;ipcluster&lt;a class="anchor-link" href="#ipcluster"&gt;&amp;#182;&lt;/a&gt;&lt;/h3&gt;&lt;p&gt;First, &lt;code&gt;shh&lt;/code&gt; into the instance by running &lt;code&gt;vagrant ssh&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You need to know the private address of the instance. Use this one-liner to get it: &lt;code&gt;python -c 'import socket; print socket.gethostbyname(socket.gethostname())'&lt;/code&gt; it should print something like: &lt;code&gt;10.2.182.86&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Start the &lt;code&gt;ipcontroller&lt;/code&gt; by running the &lt;code&gt;ipcluster&lt;/code&gt; salt state, you need to add a couple of values, mainly the aws and ec2 instances settings:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sudo salt-call state.sls ipcluster pillar='{ipcluster: {master: {MASTER_ADDRESS}, keyname: {AWS_KEYPAIR_NAME}, securitygroup: {EC2_SECURITY_GROUP_NAME}}, aws: {access_key: {AWS_ACCESS_KEY}, secret_key: {AWS_SECRET_KEY}}}'&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The previous command will install the dependencies of &lt;code&gt;salt-cloud&lt;/code&gt; and start the &lt;code&gt;ipcontroller&lt;/code&gt; process.&lt;/p&gt;
+&lt;p&gt;Now you need to create the instances that are going to run the &lt;code&gt;ipengine&lt;/code&gt;: &lt;code&gt;sudo salt-cloud -p base_ec2 ipython-minion-X&lt;/code&gt; where &lt;code&gt;X&lt;/code&gt; can be a number or string, i ran it with 1 and 2 for this example. This command will create the new instances, install the &lt;code&gt;salt-minion&lt;/code&gt; and connect it to the &lt;code&gt;salt-master&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To test that the minions are running run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;↪ sudo salt '*' test.ping
+ipython-minion-1:
+    True
+ipython-minion-2:
+    True&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now start the &lt;code&gt;ipengine&lt;/code&gt; on each minion by running the &lt;code&gt;ipcluster-minion&lt;/code&gt; salt state, this will also provision the same python environment using anaconda. Run &lt;code&gt;sudo salt '*' saltutil.sync_all&lt;/code&gt; and after &lt;code&gt;sudo salt '*' state.sls ipcluster-minion&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;Everything should be in place now, go to the notebook and connect to the clients:&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[1]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;IPython.parallel&lt;/span&gt; &lt;span class="k"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Client&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[2]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Client&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[3]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[3]:&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;4&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;We can see that there are four clients since by default it will be 2 &lt;code&gt;ipengine&lt;/code&gt;s per instance. We can check the address and pid of each engine:&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[4]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;where_am_i&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+    &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;socket&lt;/span&gt;
+    
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;In process with pid &lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt; on host: &amp;#39;&lt;/span&gt;&lt;span class="si"&gt;{1}&lt;/span&gt;&lt;span class="s2"&gt;&amp;#39;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;getpid&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;socket&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;gethostname&lt;/span&gt;&lt;span class="p"&gt;())&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[5]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;where_am_i&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[5]:&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;&amp;#34;In process with pid 15314 on host: &amp;#39;ip-10-151-123-100&amp;#39;&amp;#34;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[6]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;direct_view&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;direct_view&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[7]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;where_am_i_direct_results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;direct_view&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;where_am_i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[8]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;where_am_i_direct_results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[8]:&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;[&amp;#34;In process with pid 14018 on host: &amp;#39;domU-12-31-39-16-52-7E&amp;#39;&amp;#34;,
+ &amp;#34;In process with pid 14019 on host: &amp;#39;domU-12-31-39-16-52-7E&amp;#39;&amp;#34;,
+ &amp;#34;In process with pid 13956 on host: &amp;#39;ip-10-110-86-251&amp;#39;&amp;#34;,
+ &amp;#34;In process with pid 13955 on host: &amp;#39;ip-10-110-86-251&amp;#39;&amp;#34;]&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;We can see that there are two process on each instance.&lt;/p&gt;
+&lt;p&gt;Now lets add one more machine by running:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;sudo salt-cloud -p base_ec2 ipython-minion-3&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo salt '*' saltutil.sync_all&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;sudo salt '*' state.sls ipcluster-minion&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[9]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;client&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[9]:&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;6&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[10]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;where_am_i_direct_results&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;direct_view&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;where_am_i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;where_am_i_direct_results&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt output_prompt"&gt;Out[10]:&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea output_execute_result"&gt;
+&lt;pre&gt;[&amp;#34;In process with pid 14617 on host: &amp;#39;domU-12-31-39-16-52-7E&amp;#39;&amp;#34;,
+ &amp;#34;In process with pid 14618 on host: &amp;#39;domU-12-31-39-16-52-7E&amp;#39;&amp;#34;,
+ &amp;#34;In process with pid 14554 on host: &amp;#39;ip-10-110-86-251&amp;#39;&amp;#34;,
+ &amp;#34;In process with pid 14553 on host: &amp;#39;ip-10-110-86-251&amp;#39;&amp;#34;,
+ &amp;#34;In process with pid 14006 on host: &amp;#39;ip-10-191-45-204&amp;#39;&amp;#34;,
+ &amp;#34;In process with pid 14007 on host: &amp;#39;ip-10-191-45-204&amp;#39;&amp;#34;]&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;There was no need to restart the notebook or anything, IPython.parallel took care of everything.&lt;/p&gt;
+&lt;p&gt;Since we bootstrapped the same python environment using anaconda we can use the scientific libraries, for example numpy:&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing code_cell rendered"&gt;
+&lt;div class="input"&gt;
+&lt;div class="prompt input_prompt"&gt;In&amp;nbsp;[15]:&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+    &lt;div class="input_area"&gt;
+&lt;div class=" highlight hl-ipython3"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;%%&lt;/span&gt;&lt;span class="k"&gt;px&lt;/span&gt;
+import numpy as np
+A = np.random.random((2,2))
+ev = numpy.linalg.eigvals(A)
+ev.max()
+&lt;/pre&gt;&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;div class="output_wrapper"&gt;
+&lt;div class="output"&gt;
+
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea "&gt;
+&lt;pre&gt;&lt;span class="ansi-red-fg"&gt;Out[4:3]: &lt;/span&gt;1.0222318748650969&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea "&gt;
+&lt;pre&gt;&lt;span class="ansi-red-fg"&gt;Out[5:3]: &lt;/span&gt;1.138421700991769&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea "&gt;
+&lt;pre&gt;&lt;span class="ansi-red-fg"&gt;Out[6:3]: &lt;/span&gt;1.0188265649715529&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea "&gt;
+&lt;pre&gt;&lt;span class="ansi-red-fg"&gt;Out[7:3]: &lt;/span&gt;0.74439354047097206&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea "&gt;
+&lt;pre&gt;&lt;span class="ansi-red-fg"&gt;Out[8:3]: &lt;/span&gt;1.468974252745251&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;div class="output_area"&gt;
+
+&lt;div class="prompt"&gt;&lt;/div&gt;
+
+
+
+
+&lt;div class="output_text output_subarea "&gt;
+&lt;pre&gt;&lt;span class="ansi-red-fg"&gt;Out[9:3]: &lt;/span&gt;0.92031189875595965&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="Conclusions"&gt;Conclusions&lt;a class="anchor-link" href="#Conclusions"&gt;&amp;#182;&lt;/a&gt;&lt;/h2&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;It was relatively simple to get 6 workers running on the cloud and while it is not as simple as creating a config file and run one command as startcluster most of the stuff can be easily wrapped in a command line utility.&lt;/p&gt;
+&lt;p&gt;It was also simple to write this code since it was no code just salt states, I also learned about salt-cloud and like salt even more now.&lt;/p&gt;
+&lt;p&gt;Finally is worth saying that there are dozens of examples of what you can do with IPython.parallel on the web, one of my favorites is by Olivier Grisel where he does &lt;a href="http://nbviewer.ipython.org/gist/anonymous/5115540/Model%20Selection%20for%20the%20Nystroem%20Method.ipynb"&gt;machine learning with sklearn&lt;/a&gt;.&lt;/p&gt;
+
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+ 
+
+
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: 'center'," +
+        "    displayIndent: '0em'," +
+        "    showMathMenu: true," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['$','$'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        " linebreaks: { automatic: true, width: '95% container' }, " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+        "    } " +
+        "}); ";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;
+</summary><category term="Python"></category><category term="IPython Parallel"></category><category term="Salt"></category><category term="Vagrant"></category></entry><entry><title>From zero to storm cluster for scikit-learn classification</title><link href="https://blog.vipings.com/blog/2014/08/01/storm-sklearn/" rel="alternate"></link><published>2014-08-01T00:00:00+05:30</published><updated>2014-08-01T00:00:00+05:30</updated><author><name>Daniel Rodriguez</name></author><id>tag:blog.vipings.com,2014-08-01:blog/2014/08/01/storm-sklearn/</id><summary type="html">&lt;p&gt;&lt;a href="http://https://storm.incubator.apache.org/"&gt;Apache storm&lt;/a&gt; is a new technology
+that allows to do real-time computation that its been in the big data news
+lately and I was curious to try it to see if its really good or is a just
+the new map-reduce.&lt;/p&gt;
+&lt;p&gt;One of the first (and no brainer) ideas I had was to do real-time
+classification of a scikit-learn model, the main issue was that storm is Java and
+I didn't want to all the integration between Java and Python
+but after I saw in the pydata videos that the people at
+&lt;a href="https://parsely.com/"&gt;Parsely&lt;/a&gt; already took some of that pain out with
+their new &lt;a href="https://github.com/Parsely/streamparse"&gt;streamparse&lt;/a&gt; library
+I had no more excuses to try it.&lt;/p&gt;
+&lt;h2&gt;Storm cluster&lt;/h2&gt;
+&lt;p&gt;I decided to deploy a storm cluster and after failing to use their EC2 scripts
+I decided to do it myself using &lt;a href="http://saltstack.com"&gt;salt&lt;/a&gt;.
+I found an amazing &lt;a href="http://www.michael-noll.com/tutorials/running-multi-node-storm-cluster"&gt;step by step tutorial&lt;/a&gt;
+from  Michael Noll that explains how to deploy everything, including the
+a the zookeeper quorum (a first time from me too).&lt;/p&gt;
+&lt;p&gt;Is important to note that Michael Noll has some nice scripts to deploy everything
+using puppet and vagrant, but since I don't like puppet I decided to recreate some
+of his work on salt which it was very straight forward since there are already some
+&lt;a href="https://github.com/saltstack-formulas/zookeeper-formula"&gt;zookeeper states&lt;/a&gt; for salt
+so I only had to leverage that to create some storm states.&lt;/p&gt;
+&lt;p&gt;The states I created are very extensible and can extended to many instances
+using salt-cloud as described in the documentation.&lt;/p&gt;
+&lt;h2&gt;scikit-learn&lt;/h2&gt;
+&lt;p&gt;After having the storm cluster up and running I needed to solve a different
+issue: most storm topologies examples do a very simple calculation,
+e.g. word count, they don't need to load anything (big) to do their calculation.&lt;/p&gt;
+&lt;p&gt;The scikit-learn classification is a little bit more complex since it needs to
+load the model before doing the calculation and you don't want to load the model
+in every storm process in the same machine.
+Thats where &lt;a href="http://scikit-learn.org/stable/tutorial/basic/tutorial.html#model-persistence"&gt;memory mapping and joblib&lt;/a&gt;
+comes handy, you can load the model once into memory once
+and other processes can use the same model into memory to do the calculation.&lt;/p&gt;
+&lt;p&gt;To deploy the pickled model into the storm cluster I used salt again to
+just download the model from github.
+The example I did uses a tiny SVM on the iris dataset
+but the idea can be easily extended to download bigger models from S3 for example.&lt;/p&gt;
+&lt;h2&gt;streamparse&lt;/h2&gt;
+&lt;p&gt;&lt;a href="https://github.com/Parsely/streamparse"&gt;streamparse&lt;/a&gt; is a nice library
+from the people at &lt;a href="https://parsely.com/"&gt;Parsely&lt;/a&gt; that makes easy to create
+storm topologies using python and a little bit of clojure.
+The library is young but it looks promising, my main complain is that it
+tries to take care of more that it should: python environments.&lt;/p&gt;
+&lt;p&gt;They try to solve the virutalenvs problem using fabric and the classic virtualenv,
+a valid approach for a small storm cluster and basic python libraries.
+I believe that this problem should be solve by a tool like salt in case you
+have a big cluster and also using &lt;a href="http://continuum.io/downloads"&gt;conda&lt;/a&gt;
+for the python environmenst since it gives you an easier use of the
+to use the scientific libraries.&lt;/p&gt;
+&lt;p&gt;So I used salt to solve the virutalenv problems using one of my
+&lt;a href="http://danielfrg.com/blog/2014/04/18/ipython-parallel-cluster-salt/"&gt;conda states&lt;/a&gt;
+and then I had to recreate some of the streamparse submit so it does not create
+any virutalenvs, just submit the topology to the storm-nimbus.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Storm topology logs" src="/images/blog/2014/08/storm-log.png" title="Storm topology logs" /&gt;&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;I am very happy with the results since I was able to do this by
+leveraging a lot of useful tools making it very easy to develop and deploy,
+making it very scalable and reproducible.&lt;/p&gt;
+&lt;p&gt;I still need to test more storm to take my final decision and see
+were it is really useful. Is the complexity of maintaining a zookeeper quorum
+and storm cluster really worth it? Or do I just keep using 0MQ?&lt;/p&gt;
+&lt;p&gt;One bonus idea is to make the storm spouts and bolts more useful
+by integrating with the outside world, for now it just keeps predicting the
+same data forever, maybe a good idea would be to do some websockets as spout
+and bolts to make a nice real-time UI.&lt;/p&gt;
+&lt;p&gt;All the code and documentation on how to make everything is on github:
+&lt;a href="https://github.com/danielfrg/storm-sklearn"&gt;storm-sklearn&lt;/a&gt;&lt;/p&gt;</summary><category term="Python"></category><category term="Storm"></category><category term="Salt"></category><category term="scikit-learn"></category></entry></feed>
