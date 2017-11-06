@@ -5,35 +5,42 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.vipings.com/index.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/archives.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tags.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/categories.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/pages/about.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://blog.vipings.com/blog/2017/11/06/blogging-pelican-jupyter/</loc>
+<lastmod>2017-11-06T00:00:00:%s</lastmod>
 <changefreq>monthly</changefreq>
 <priority>0.5</priority>
 </url>
@@ -61,105 +68,133 @@ xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
 <url>
 <loc>https://blog.vipings.com/category/02.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/category/04.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://blog.vipings.com/category/11.html</loc>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/category/storm-sklearn.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/python.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://blog.vipings.com/tag/blogging.html</loc>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://blog.vipings.com/tag/jupyternotebook.html</loc>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.5</priority>
+</url>
+
+<url>
+<loc>https://blog.vipings.com/tag/pelican.html</loc>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/impala.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/odbc.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/thrift.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/iopro.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/ipython-parallel.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/salt.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/vagrant.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/storm.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/tag/scikit-learn.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/author/daniel-rodriguez.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
 
 <url>
 <loc>https://blog.vipings.com/author/vipin-g-s.html</loc>
-<lastmod>2017-11-06T12:28:55-00:00</lastmod>
+<lastmod>2017-11-06T14:01:34-00:00</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.5</priority>
 </url>
