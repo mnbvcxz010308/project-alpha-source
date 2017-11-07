@@ -1,31 +1,26 @@
 branches:
   only:
   - master
-
 language: python
 sudo: false
-
 notifications:
   email: false
-
 python:
-  - 3.4
-
+- 3.4
 install:
-  - git submodule update --init --recursive
-  # Miniconda
-  - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-  - bash miniconda.sh -b -p $HOME/conda
-  - export PATH="$HOME/conda/bin:$PATH"
-  - conda config --set always_yes yes
-  # - conda update -q conda  # Never again! Bring Aaron back!
-  - conda install pyyaml  # Related to https://github.com/conda/conda/issues/3738
-  - conda info -a
-  - conda env create
-  - export PATH="$HOME/conda/envs/blogenv/bin:$PATH"
-  - conda list
-
+- git submodule update --init --recursive
+- wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+- bash miniconda.sh -b -p $HOME/conda
+- export PATH="$HOME/conda/bin:$PATH"
+- conda config --set always_yes yes
+- conda install pyyaml
+- conda info -a
+- conda env create
+- export PATH="$HOME/conda/envs/blogenv/bin:$PATH"
+- conda list
 script:
-  - make html
-
-after_success: ./deploy.sh
+- make html
+after_success: "./deploy.sh"
+env:
+  matrix:
+    secure: WDFieFcFQA55ChQXuOFXhoG2VqpaQ6W1BwFiwHYXqbBp0H5HL1aW3D93EQlbdVDX2WeyMW44gHb3fekuVsnNAd/wiRp8qoR4Wnz8irFRQe6lRdfbYzX4uz/Aks4D3yR1imEozuacL1mwvXi5flp5+Ca7bYRpdc8pLo8V+SHHhWRID44huoaQIgdfWwGtyJEhuEXPxXBI888QNeiJXkjuMFISzdsCyObrxr9/2xaR40XfOvCr9AgCBnHOfez+v8++eTx9+nisDDYvib8scRRtNJyssGdzVZKveKaPf6rpe3KzAd2XrNnbVlDdO/ML6FY1j2KoRJNAPyjaq50BIxmV7rl89AJcZ0zifY1Tj2y1mC5+rTLhvijabTuSGU16gX2cI+RgmAqEV+C0YCbn+I19Sb9NaDVU63rDvnPnX19suQH6orcTHpHrdKXlXyl9oG+cXRrKWgNcwZVCoq1+8VTH8rXxjEr0pldEC3ejx0Qo5H2BYqo+uSsa9VqHXIDhkK+yoAR7FuqRwZlPRzwJmyIFCe7hhMh7wbumFC0QgpoQ9x72wo9bKBfgDhcvdKeRxcf1hCXzM1u+Nd6oZgjZbDOgbb3bhtBzac7PuLq/9DMO+AZ8Ndg8BDDpBPyu8pTkNBT31QXw26Lj1LuH7+A9U2UaSTPDWxVd9BOVT4FE+jffWeo=
