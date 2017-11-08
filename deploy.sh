@@ -10,10 +10,12 @@ PELICAN_OUTPUT_FOLDER=output
 
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     echo -e "Starting to deploy to Github Pages\n"
+    echo "Reached Here"
     if [ "$TRAVIS" == "true" ]; then
         git config --global user.email "travis@travis-ci.org"
         git config --global user.name "Travis"
     fi
+    echo "Reached Here 2"
     # using token clone target gh-pages repo and branch
     git clone --quiet --branch=$BRANCH https://${GH_TOKEN}@github.com/$TARGET_REPO built_website > /dev/null
     # go into directory and copy data we're interested in to that directory
