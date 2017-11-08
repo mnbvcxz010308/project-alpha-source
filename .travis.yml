@@ -1,11 +1,12 @@
 branches:
   only:
   - dev
-  
+
 language: python
 cache:
   directories:
     - $HOME/.cache/pip
+    - $HOME/conda
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 sudo: false
