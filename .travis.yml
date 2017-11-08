@@ -4,10 +4,10 @@ branches:
 
 language: python
 cache:
-  apt: true
+
   directories:
     - $HOME/.cache/pip
-    - $HOME/download
+    
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 sudo: false
@@ -22,24 +22,10 @@ before_install:
 install:
   - git submodule update --init --recursive
   # Miniconda
-  - echo 'List files from cached directories'
-  - echo 'pip:'
-  - ls $HOME/.cache/pip
-  - echo 'download'
-  - ls $HOME/download
-  - pushd .
-  - mkdir -p download
-  - echo "Cached in $HOME/download :"
-  - ls -l
-  - echo
-  - if [[ ! -f miniconda.sh ]]; then
-      wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
-  - chmod +x miniconda.sh && ./miniconda.sh -b
-  - cd ..
+  - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+  - bash miniconda.sh -b -p $HOME/conda
   - export PATH="$HOME/conda/bin:$PATH"
   - conda config --set always_yes yes
-  - popd
   # - conda update -q conda  # Never again! Bring Aaron back!
   - conda install pyyaml  # Related to https://github.com/conda/conda/issues/3738
   - conda info -a
