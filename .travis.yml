@@ -3,6 +3,10 @@ branches:
   - dev
 
 language: python
+
+cache: true
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
 sudo: false
 
 notifications:
