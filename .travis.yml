@@ -10,7 +10,8 @@ notifications:
 
 python:
   - 3.4
-
+before_install:
+  - chmod +x deploy.sh
 install:
   - git submodule update --init --recursive
   # Miniconda
