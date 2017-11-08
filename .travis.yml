@@ -33,10 +33,10 @@ install:
   - ls -l
   - echo
   - if [[ ! -f miniconda.sh ]]
-         then
-         wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh \
+         - then
+         - wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh \
              -O miniconda.sh
-         fi
+         - fi
   - chmod +x miniconda.sh && ./miniconda.sh -b
   - cd ..
   - export PATH="$HOME/conda/bin:$PATH"
