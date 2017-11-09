@@ -4,10 +4,10 @@ branches:
 
 language: python
 cache:
-
+  
   directories:
     - $HOME/.cache/pip
-    
+
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 sudo: false
