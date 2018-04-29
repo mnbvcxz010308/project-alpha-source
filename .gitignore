@@ -104,6 +104,5 @@ venv.bak/
 .mypy_cache/
 
 *.pid
-output/
 cache/
 .ipynb_checkpoints

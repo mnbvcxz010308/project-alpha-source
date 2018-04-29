@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"><channel><title>EssentialDataScience - Me</title><link>https://blog.vipings.com/</link><description></description><lastBuildDate>Sat, 16 Feb 2013 00:00:00 +0530</lastBuildDate><item><title>With Metdata inside the .ipynb</title><link>https://blog.vipings.com/blog/2013/02/16/with-metadata/</link><description>
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur purus mi, sollicitudin ac justo a, dapibus ultrices dolor. Curabitur id eros mattis, tincidunt ligula at, condimentum urna. Morbi accumsan, risus eget porta consequat, tortor nibh blandit dui, in sodales quam elit non erat. Aenean lorem dui, lacinia a metus eu, accumsan dictum urna. Sed a egestas mauris, non porta nisi. Suspendisse eu lacinia neque. Morbi gravida eros non augue pharetra, condimentum auctor purus porttitor.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="cell border-box-sizing text_cell rendered"&gt;&lt;div class="prompt input_prompt"&gt;
+&lt;/div&gt;
+&lt;div class="inner_cell"&gt;
+&lt;div class="text_cell_render border-box-sizing rendered_html"&gt;
+&lt;h2 id="Header-2"&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Me</dc:creator><pubDate>Sat, 16 Feb 2013 00:00:00 +0530</pubDate><guid isPermaLink="false">tag:blog.vipings.com,2013-02-16:/blog/2013/02/16/with-metadata/</guid><category>tag1</category><category>tag2</category></item></channel></rss>
