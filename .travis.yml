@@ -36,4 +36,7 @@ install:
 script:
   - make html
 
-after_success: ./deploy.sh
+# after_success: ./deploy.sh
+deploy:
+  provider: script
+  script: bash deploy.sh
