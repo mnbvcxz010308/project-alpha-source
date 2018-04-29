@@ -3,13 +3,7 @@ branches:
   - dev
 
 language: python
-cache:
-  
-  directories:
-    - $HOME/.cache/pip
 
-before_cache:
-  - rm -f $HOME/.cache/pip/log/debug.log
 sudo: false
 
 notifications:
@@ -36,9 +30,6 @@ install:
 script:
   - make html
 
-# after_success: ./deploy.sh
-deploy:
-  provider: script
-  script: bash deploy.sh
-  on:
-    branch: develop
+after_success: 
+  - bash deploy.sh
+
