@@ -8,6 +8,7 @@ BRANCH=gh-pages
 # Where does pelican output the website
 PELICAN_OUTPUT_FOLDER=output
 
+echo "$TRAVIS_PULL_REQUEST"
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     echo -e "Starting to deploy to Github Pages\n"
     echo "Reached Here"
