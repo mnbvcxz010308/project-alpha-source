@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
-
 # GH_TOKEN should be an env variable that has a Github Personal token with access to the public repos
-
 # Target repo and branch to push the website
 TARGET_REPO=mnbvcxz010308/vipings-blog.git
 BRANCH=gh-pages
 # Where does pelican output the website
 PELICAN_OUTPUT_FOLDER=output
-
 echo "$TRAVIS_PULL_REQUEST"
 if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
     echo -e "Starting to deploy to Github Pages\n"
