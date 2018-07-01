@@ -5,7 +5,7 @@ LOAD_CONTENT_CACHE = False
 SITEURL = 'https://blog.vipings.com'
 # SITEURL = 'http://danielfrg.github.io'
 AUTHOR = u'Vipin G S'
-SITENAME = u'EssentialDataScience'
+SITENAME = u'VipinGS Notes'
 
 TIMEZONE = 'Asia/Kolkata'
 
