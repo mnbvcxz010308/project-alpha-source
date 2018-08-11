@@ -11,8 +11,8 @@ dependencies:
   - plotly
   - bokeh
   - pip:
-    - pelican>=3.7.0
-    - Markdown==2.6.11
+    - pelican>=3.6.0
+    - Markdown==2.6.2
     - jsonschema==2.4.0
-    - mistune==0.8.3
+    - mistune==0.5.1
     - pylint
