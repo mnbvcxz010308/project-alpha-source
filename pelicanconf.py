@@ -45,7 +45,7 @@ STATIC_PATHS = ['images', 'favicon.ico', '404.html', 'robots.txt', 'CNAME']
 # THEME SETTINGS
 DEFAULT_HEADER_BG = '/images/station1.jpg'
 ABOUT_PAGE = '/pages/about.html'
-TWITTER_USERNAME = 'mnbvcxz010308'
+TWITTER_USERNAME = 'mnbvcxz'
 GITHUB_USERNAME = 'mnbvcxz010308'
 SHOW_ARCHIVES = True
 SHOW_FEED = True
