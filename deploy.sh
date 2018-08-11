@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # GH_TOKEN should be an env variable that has a Github Personal token with access to the public repos
 # Target repo and branch to push the website
-TARGET_REPO=https://github.com/mnbvcxz010308/project-alpha.git
+TARGET_REPO=mnbvcxz010308/project-alpha.git
 BRANCH=gh-pages
 
 # Where does pelican output the website
