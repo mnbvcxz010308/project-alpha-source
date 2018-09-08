@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 LOAD_CONTENT_CACHE = False
 
-SITEURL = 'https://blog.vipings.com'
+SITEURL = 'https://vipings.com'
 # SITEURL = 'http://danielfrg.github.io'
 AUTHOR = u'Vipin G S'
 SITENAME = u'VipinGS Notes'
